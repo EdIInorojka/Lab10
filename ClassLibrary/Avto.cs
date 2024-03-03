@@ -1,0 +1,206 @@
+﻿using Lab9;
+using System;
+namespace ClassLibrary
+{
+    public class Avto : IInit, IComparable, ICloneable
+    {
+        protected string brand;       // бренд
+        protected int year;           // год выпуска
+        protected string color;       // цвет
+        protected int price;       // стоимость
+        protected int groundClearance;  // дорожный просвет
+        public Avto()
+        {
+            // конструктор без параметров
+            brand = "";
+            year = 0;
+            color = "";
+            price = 0;
+            groundClearance = 0;
+        }
+
+        public Avto(string brand, int year, string color, int price, int groundClearance)
+        {
+            // конструктор с параметрами
+            this.brand = brand;
+            this.year = year;
+            this.color = color;
+            this.price = price;
+            this.groundClearance = groundClearance;
+        }
+
+        public Avto(Avto avto)
+        {
+            // конструктор копирования
+            brand = avto.brand;
+            year = avto.year;
+            color = avto.color;
+            price = avto.price;
+            groundClearance = avto.groundClearance;
+        }
+
+        public string Brand
+        {
+            get { return brand; }
+            set { brand = value; }
+        }
+
+        public int Year
+        {
+            get { return year; }
+            set
+            {
+                if (value >= 1885)
+                    year = value;
+                else
+                    throw new ArgumentException("Первая машина создана в 1885 году");
+            }
+        }
+
+        public string Color
+        {
+            get { return color; }
+            set { color = value; }
+        }
+
+        public int Price
+        {
+            get { return price; }
+            set
+            {
+                if (value >= 0)
+                    price = value;
+                else
+                    throw new ArgumentException("Стоимость не может быть отрицательной.");
+            }
+        }
+
+        public int GroundClearance
+        {
+            get { return groundClearance; }
+            set
+            {
+                if (value >= 0)
+                    groundClearance = value;
+                else
+                    throw new ArgumentException("Дорожный просвет не может быть отрицательным.");
+            }
+        }
+
+        public virtual void Show()
+        {
+            Console.WriteLine("Бренд: " + brand);
+            Console.WriteLine("Год выпуска: " + year);
+            Console.WriteLine("Цвет: " + color);
+            Console.WriteLine("Стоимость: " + price);
+            Console.WriteLine("Дорожный просвет: " + groundClearance);
+        }
+
+        public virtual void Init()
+        {
+            Console.Write("Введите бренд: ");
+            brand = Console.ReadLine();
+
+            Console.Write("Введите год выпуска: ");
+            year = int.Parse(Console.ReadLine());
+
+            Console.Write("Введите цвет: ");
+            color = Console.ReadLine();
+
+            Console.Write("Введите стоимость: ");
+            price = int.Parse(Console.ReadLine());
+
+            Console.Write("Введите дорожный просвет: ");
+            groundClearance = int.Parse(Console.ReadLine());
+        }
+
+        public virtual void RandomInit()
+        {
+            Random rnd = new Random();
+
+            string[] brands = { "Audi", "BMW", "Mercedes", "Chevrolet", "Ford" };
+            int brandIndex = rnd.Next(brands.Length);
+            brand = brands[brandIndex];
+
+            year = rnd.Next(1885, 2024);
+
+            string[] colors = { "Красный", "Синий", "Зеленый", "Белый", "Черный" };
+            int colorIndex = rnd.Next(colors.Length);
+            color = colors[colorIndex];
+
+            price = rnd.Next(10000, 1000000);
+
+            groundClearance = rnd.Next(50, 500);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            Avto other = (Avto)obj;
+
+            return brand == other.brand &&
+                   year == other.year &&
+                   color == other.color &&
+                   price == other.price &&
+                   groundClearance == other.groundClearance;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+
+            if (obj.GetType() != typeof(Avto))
+            {
+                return 1;
+            }
+
+            Avto otherAvto = obj as Avto;
+
+           
+            if (otherAvto != null)
+            {
+                if (/*variant == 1*/true)
+                {
+                    if (this.Price > otherAvto.Price)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    if (this.year > otherAvto.year)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        public object Clone()
+        {
+            return new Avto(brand, year, color, price, groundClearance);
+        }
+
+        public Avto ShallowCopy()
+        {
+            // поверхностное копирование объекта
+            return (Avto)this.MemberwiseClone();
+        }
+    }
+}
+
+
